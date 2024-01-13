@@ -12,12 +12,17 @@ WINDOW_HEIGHT = 600
 window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT)) # on crée la fenêtre
 
 def main_menu():
+    # Musique de fond
+    pygame.mixer.music.load(
+        "/home/antoine/Bureau/Atelier Jeux Vidéos/Pygame/test_space_invaders/sounds/menu_music.mp3")
+    pygame.mixer.music.play(-1)  # on joue la musique en boucle (le premier argument correspond au nombre de fois que la musique va être jouée, -1 correspond à une boucle infinie)
+
     is_menu_running = True
 
     while is_menu_running:
-        pygame.display.set_caption("Space Invaders - Menu Principal") # on donne un titre à la fenêtre
+        pygame.display.set_caption("Space Invaders - Menu Principal")  # on donne un titre à la fenêtre
 
-        window.fill((0, 0, 0)) # on remplit la fenêtre de noir
+        window.fill((0, 0, 0))  # on remplit la fenêtre de noir
 
         menu_mouse_pos = pygame.mouse.get_pos() # on récupère la position de la souris
 
@@ -39,11 +44,11 @@ def main_menu():
             pygame.draw.rect(window, (255, 0, 0), menu_play_button) # on dessine le bouton en rouge
             menu_play_text = pygame.font.SysFont("Arial", 30).render("Jouer", True, (255, 255, 255)) # on crée le texte du bouton en blanc
             if pygame.mouse.get_pressed()[0]: # si on clique sur le bouton
-                play() # on lance le jeu
+                play()  # on lance le jeu
         else:
             pygame.draw.rect(window, (255, 255, 255), menu_play_button) # on dessine le bouton en blanc
 
-        window.blit(menu_play_text, menu_play_text_rect) # on affiche le texte du bouton
+        window.blit(menu_play_text, menu_play_text_rect)  # on affiche le texte du bouton
 
         if menu_quit_button.collidepoint(menu_mouse_pos): # si la souris est sur le bouton quitter
             pygame.draw.rect(window, (255, 0, 0), menu_quit_button) # on dessine le bouton en rouge
@@ -71,9 +76,141 @@ def main_menu():
     pygame.quit() # on quitte PyGame
 
 
+def game_over_menu():
+    # Musique de fond
+    pygame.mixer.music.load("/home/antoine/Bureau/Atelier Jeux Vidéos/Pygame/test_space_invaders/sounds/game_over_music.mp3")
+    pygame.mixer.music.play(-1)  # on joue la musique en boucle (le premier argument correspond au nombre de fois que la musique va être jouée, -1 correspond à une boucle infinie)
+
+    is_game_over_menu_running = True
+
+    while is_game_over_menu_running:
+        pygame.display.set_caption("Space Invaders - Game Over") # on donne un titre à la fenêtre
+
+        window.fill((0, 0, 0)) # on remplit la fenêtre de noir
+
+        game_over_menu_mouse_pos = pygame.mouse.get_pos() # on récupère la position de la souris
+
+        game_over_menu_text = pygame.font.SysFont("Arial", 50).render("Game Over", True, (255, 255, 255)) # on crée le texte du menu
+        game_over_menu_text_rect = game_over_menu_text.get_rect() # on récupère le rectangle du texte
+        game_over_menu_text_rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 100) # on centre le texte
+
+        game_over_menu_play_button = pygame.Rect(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2, 200, 50) # on crée le bouton pour rejouer
+        game_over_menu_play_text = pygame.font.SysFont("Arial", 30).render("Rejouer", True, (0, 0, 0)) # on crée le texte du bouton
+        game_over_menu_play_text_rect = game_over_menu_play_text.get_rect() # on récupère le rectangle du texte
+        game_over_menu_play_text_rect.center = game_over_menu_play_button.center # on centre le texte
+
+        game_over_menu_quit_button = pygame.Rect(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 100, 200, 50) # on crée le bouton pour quitter
+        game_over_menu_quit_text = pygame.font.SysFont("Arial", 30).render("Quitter", True, (0, 0, 0)) # on crée le texte du bouton
+        game_over_menu_quit_text_rect = game_over_menu_quit_text.get_rect() # on récupère le rectangle du texte
+        game_over_menu_quit_text_rect.center = game_over_menu_quit_button.center # on centre le texte
+
+        if game_over_menu_play_button.collidepoint(game_over_menu_mouse_pos): # si la souris est sur le bouton rejouer
+            pygame.draw.rect(window, (255, 0, 0), game_over_menu_play_button) # on dessine le bouton en rouge
+            game_over_menu_play_text = pygame.font.SysFont("Arial", 30).render("Rejouer", True, (255, 255, 255)) # on crée le texte du bouton en blanc
+            if pygame.mouse.get_pressed()[0]: # si on clique sur le bouton
+                play()
+        else:
+            pygame.draw.rect(window, (255, 255, 255), game_over_menu_play_button) # on dessine le bouton en blanc
+
+        window.blit(game_over_menu_play_text, game_over_menu_play_text_rect) # on affiche le texte du bouton
+
+        if game_over_menu_quit_button.collidepoint(game_over_menu_mouse_pos): # si la souris est sur le bouton quitter
+            pygame.draw.rect(window, (255, 0, 0), game_over_menu_quit_button) # on dessine le bouton en rouge
+            game_over_menu_quit_text = pygame.font.SysFont("Arial", 30).render("Quitter", True, (255, 255, 255)) # on crée le texte du bouton en blanc
+            if pygame.mouse.get_pressed()[0]: # si on clique sur le bouton
+                is_game_over_menu_running = False
+        else:
+            pygame.draw.rect(window, (255, 255, 255), game_over_menu_quit_button)
+
+        window.blit(game_over_menu_quit_text, game_over_menu_quit_text_rect) # on affiche le texte du bouton
+
+        window.blit(game_over_menu_text, game_over_menu_text_rect) # on affiche le texte du menu
+
+        pygame.display.update() # on met à jour l'affichage
+
+        for event in pygame.event.get(): # on parcourt la liste des évènements
+
+                if event.type == pygame.QUIT: # si on clique sur la croix
+                    is_game_over_menu_running = False
+
+                if event.type == pygame.KEYDOWN: # si on appuie sur une touche
+                    if event.key == pygame.K_ESCAPE:
+                        is_game_over_menu_running = False
+
+    pygame.quit() # on quitte PyGame
+
+
+def game_win_menu():
+    is_game_win_menu_running = True
+
+    while is_game_win_menu_running:
+        pygame.display.set_caption("Space Invaders - Victoire") # on donne un titre à la fenêtre
+
+        window.fill((0, 0, 0))  # on remplit la fenêtre de noir
+
+        game_win_menu_mouse_pos = pygame.mouse.get_pos()  # on récupère la position de la souris
+
+        game_win_menu_text = pygame.font.SysFont("Arial", 50).render("Victoire", True, (255, 255, 255))  # on crée le texte du menu
+        game_win_menu_text_rect = game_win_menu_text.get_rect()  # on récupère le rectangle du texte
+        game_win_menu_text_rect.center = (WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - 100)  # on centre le texte
+
+        game_win_menu_play_button = pygame.Rect(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2, 200, 50)  # on crée le bouton pour rejouer
+        game_win_menu_play_text = pygame.font.SysFont("Arial", 30).render("Rejouer", True, (0, 0, 0))  # on crée le texte du bouton
+        game_win_menu_play_text_rect = game_win_menu_play_text.get_rect()  # on récupère le rectangle du texte
+        game_win_menu_play_text_rect.center = game_win_menu_play_button.center  # on centre le texte
+
+        game_win_menu_quit_button = pygame.Rect(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 100, 200, 50)  # on crée le bouton pour quitter
+        game_win_menu_quit_text = pygame.font.SysFont("Arial", 30).render("Quitter", True, (0, 0, 0))  # on crée le texte du bouton
+        game_win_menu_quit_text_rect = game_win_menu_quit_text.get_rect()  # on récupère le rectangle du texte
+        game_win_menu_quit_text_rect.center = game_win_menu_quit_button.center  # on centre le texte
+
+        if game_win_menu_play_button.collidepoint(game_win_menu_mouse_pos):  # si la souris est sur le bouton rejouer
+            pygame.draw.rect(window, (255, 0, 0), game_win_menu_play_button)  # on dessine le bouton en rouge
+
+            game_win_menu_play_text = pygame.font.SysFont("Arial", 30).render("Rejouer", True, (255, 255, 255))  # on crée le texte du bouton en blanc
+            if pygame.mouse.get_pressed()[0]:  # si on clique sur le bouton
+                play()
+        else:
+            pygame.draw.rect(window, (255, 255, 255), game_win_menu_play_button)
+
+        window.blit(game_win_menu_play_text, game_win_menu_play_text_rect)  # on affiche le texte du bouton
+
+        if game_win_menu_quit_button.collidepoint(game_win_menu_mouse_pos):  # si la souris est sur le bouton quitter
+
+            pygame.draw.rect(window, (255, 0, 0), game_win_menu_quit_button)  # on dessine le bouton en rouge
+
+            game_win_menu_quit_text = pygame.font.SysFont("Arial", 30).render("Quitter", True, (255, 255, 255))  # on crée le texte du bouton en blanc
+
+            if pygame.mouse.get_pressed()[0]:  # si on clique sur le bouton
+                is_game_win_menu_running = False
+        else:
+            pygame.draw.rect(window, (255, 255, 255), game_win_menu_quit_button)
+
+        window.blit(game_win_menu_quit_text, game_win_menu_quit_text_rect)  # on affiche le texte du bouton
+
+        window.blit(game_win_menu_text, game_win_menu_text_rect)  # on affiche le texte du menu
+
+        pygame.display.update()  # on met à jour l'affichage
+
+        for event in pygame.event.get():  # on parcourt la liste des évènements
+
+                if event.type == pygame.QUIT:  # si on clique sur la croix
+                    is_game_win_menu_running = False
+
+                if event.type == pygame.KEYDOWN:  # si on appuie sur une touche
+
+                    if event.key == pygame.K_ESCAPE:
+                        is_game_win_menu_running = False
+
+    pygame.quit()  # on quitte PyGame
 
 
 def play():
+    # Musique de fond
+    pygame.mixer.music.load("/home/antoine/Bureau/Atelier Jeux Vidéos/Pygame/test_space_invaders/sounds/main_music.mp3")
+    pygame.mixer.music.set_volume(1) # on met le volume à 50%
+    pygame.mixer.music.play(-1)  # on joue la musique en boucle (le premier argument correspond au nombre de fois que la musique va être jouée, -1 correspond à une boucle infinie)
+
     pygame.display.set_caption("Space Invaders - A l'attaque !")  # on donne un titre à la fenêtre
 
     # On crée la variable pour afficher le fond de la fenêtre
@@ -154,6 +291,9 @@ def play():
 
         # Le joueur tire
         if keys[pygame.K_SPACE] and bullet_cooldown == 0: # si la touche espace est appuyée et que le cooldown est à 0
+            player_shot_sound = (pygame.mixer.Sound("/home/antoine/Bureau/Atelier Jeux Vidéos/Pygame/test_space_invaders/sounds/player_shot.wav"))
+            player_shot_sound.play() # on joue le son du tir du joueur
+            player_shot_sound.set_volume(0.1) # on met le volume à 10%
             bullet_x = player_x + player_image.get_width() / 2 - bullet_image.get_width() / 2 # on place le tir du joueur au milieu du vaisseau
             bullet_y = player_y - bullet_image.get_height() # on place le tir du joueur au dessus du vaisseau
             bullets.append([bullet_x, bullet_y]) # on ajoute les coordonnées du tir à la liste bullets
@@ -161,6 +301,9 @@ def play():
 
         # Les ennemis tirent
         if enemy_bullet_cooldown == 0: # si le cooldown est à 0
+            enemy_shot_sound = (pygame.mixer.Sound("/home/antoine/Bureau/Atelier Jeux Vidéos/Pygame/test_space_invaders/sounds/enemy_shot.wav"))
+            enemy_shot_sound.play() # on joue le son du tir de l'ennemi
+            enemy_shot_sound.set_volume(0.3) # on met le volume à 30%
             enemy = random.choice(enemies) # on choisit un ennemi au hasard (on importe la bibliothèque random)
             enemy_bullet_x = enemy[0] + enemy_image.get_width() / 2 - enemy_bullet_image.get_width() / 2 # on place le tir de l'ennemi au milieu du vaisseau
             enemy_bullet_y = enemy[1] + enemy_image.get_height() # on place le tir de l'ennemi en dessous du vaisseau
@@ -182,7 +325,8 @@ def play():
                    bullet[1] + bullet_image.get_height() > enemy[1] and \
                    bullet[0] < enemy[0] + enemy_image.get_width() and \
                    bullet[0] + bullet_image.get_width() > enemy[0]: # si le tir du joueur touche un ennemi (on vérifie si les rectangles des sprites se touchent)
-                    bullets.remove(bullet) # on supprime le tir du joueur
+                    if bullet in bullets: # si le tir du joueur est dans la liste bullets
+                        bullets.remove(bullet) # on supprime le tir du joueur
                     enemies.remove(enemy) # on supprime l'ennemi
 
         # On vérifie si les tirs des ennemis ont touché le joueur
@@ -191,7 +335,8 @@ def play():
                enemy_bullet[1] + enemy_bullet_image.get_height() > player_y and \
                enemy_bullet[0] < player_x + player_image.get_width() and \
                enemy_bullet[0] + enemy_bullet_image.get_width() > player_x: # si le tir de l'ennemi touche le joueur
-                enemy_bullets.remove(enemy_bullet) # on supprime le tir de l'ennemi
+                if enemy_bullet in enemy_bullets: # si le tir de l'ennemi est dans la liste enemy_bullets
+                    enemy_bullets.remove(enemy_bullet) # on supprime le tir de l'ennemi
                 running = False # on arrête la boucle principale (le jeu s'arrête)
 
 
@@ -225,9 +370,10 @@ def play():
         if enemy_bullet_cooldown > 0:
             enemy_bullet_cooldown -= 1
 
+        if len(enemies) == 0:
+            game_win_menu()
 
-    # On quitte PyGame (quand on sort de la boucle principale)
-    pygame.quit()
+    game_over_menu()
 
 
 main_menu()
